@@ -1,0 +1,103 @@
+{
+  "name": "Pythagoras Theorem",
+  "scene": {
+    "width": 1920,
+    "height": 1088,
+    "background_color": "white"
+  },
+  "definitions": [
+    {
+      "id": "title_text",
+      "type": "text",
+      "text": "Pythagoras' Theorem",
+      "position": { "x": 300, "y": 500 },
+      "font_size": 192,
+      "stroke_style": { "color": "blue", "width": 2 },
+      "glow_dot_hint": { "color": "blue", "radius": 5 }
+    },
+    {
+      "id": "title_eraser",
+      "type": "eraser",
+      "objects_to_erase": ["title_text"],
+      "glow_dot_hint": { "color": "eraser_hint", "radius": 10 }
+    },
+    {
+      "id": "right_triangle",
+      "type": "polygon",
+      "points": [
+        { "x": 500, "y": 500 },
+        { "x": 500, "y": 700 },
+        { "x": 900, "y": 700 }
+      ],
+      "stroke_style": { "color": "black", "width": 2 },
+      "sketch_style": { "roughness": 5 },
+      "fill_style": { "color": "red", "hachure_gap": 10 }
+    },
+    {
+      "id": "label_a",
+      "type": "text",
+      "text": "a",
+      "position": { "x": 450, "y": 600 },
+      "font_size": 96
+    },
+    {
+      "id": "label_b",
+      "type": "text",
+      "text": "b",
+      "position": { "x": 700, "y": 800 },
+      "font_size": 96
+    },
+    {
+      "id": "label_c",
+      "type": "text",
+      "text": "c",
+      "position": { "x": 700, "y": 550 },
+      "font_size": 96
+    },
+    {
+      "id": "label_group",
+      "type": "group",
+      "children_ids": ["label_a", "label_b", "label_c"]
+    },
+    {
+      "id": "pyth_formula",
+      "type": "math",
+      "tex_expression": "$a^2 + b^2 = c^2$",
+      "position": { "x": 900, "y": 300 },
+      "font_size": 128,
+      "stroke_style": { "color": "blue", "width": 2 }
+    }
+  ],
+  "timeline": [
+    {
+      "type": "sketch",
+      "target_id": "title_text",
+      "start_time": 0.0,
+      "duration": 3.0
+    },
+    {
+      "type": "sketch",
+      "target_id": "title_eraser",
+      "start_time": 3.5,
+      "duration": 1.5
+    },
+    {
+      "type": "sketch",
+      "target_id": "right_triangle",
+      "start_time": 6.0,
+      "duration": 3.0
+    },
+    {
+      "type": "sketch",
+      "target_id": "label_group",
+      "start_time": 8.0,
+      "duration": 2.0
+    },
+    {
+      "type": "sketch",
+      "target_id": "pyth_formula",
+      "start_time": 10.0,
+      "duration": 3.0
+    }
+  ]
+}
