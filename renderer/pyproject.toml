@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "kynetic-renderer"
+version = "0.0.1"
+description = "Renderer engine for Kynetic"
+authors = ["Hamd Waseem <hamd.waseem@hamdtel.co.uk>"]
+license = "MIT"
+readme = "README.md"
+
+packages = [
+    { include = "renderer" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+# handanim
+handanim = { git = "https://github.com/subroy13/handanim.git", branch = "master" }
+cairocffi = ">=1.7.1,<2.0.0"
+numpy = ">=2.2.4,<3.0.0"
+svgwrite = ">=1.4.3,<2.0.0"
+moviepy = ">=2.1.2,<3.0.0"
+pycairo = ">=1.27.0,<2.0.0"
+fonttools = ">=4.47.0,<5.0.0"
+matplotlib = ">=3.7.0,<4.0.0"
+svgpathtools = ">=1.7.0"
+svgelements = ">=1.9.6"
+
+pydantic = "^2.3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+black = "^24.0"
+isort = "^6.0"
+mypy = "^1.5"
+
+[tool.poetry-auto-export]
+output = "requirements.txt"
+without_hashes = true
