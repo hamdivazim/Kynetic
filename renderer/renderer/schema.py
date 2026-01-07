@@ -95,10 +95,67 @@ class GroupDrawable(BaseDrawable):
     type: Literal["group"] = "group"
     children_ids: List[str] = [] 
 
+class ArrowDrawable(BaseDrawable):
+    type: Literal["arrow"] = "arrow"
+    start_point: Point
+    end_point: Point
+    arrow_head_type: str = "->"
+    arrow_head_size: float = 10.0
+    arrow_head_angle: float = 45.0
+
+class CurvedArrowDrawable(BaseDrawable):
+    type: Literal["curved_arrow"] = "curved_arrow"
+    points: List[Point]
+    arrow_head_type: str = "->"
+    arrow_head_size: float = 10.0
+    arrow_head_angle: float = 45.0
+
+class CurveDrawable(BaseDrawable):
+    type: Literal["curve"] = "curve"
+    points: List[Point]
+
+class EllipseDrawable(BaseDrawable):
+    type: Literal["ellipse"] = "ellipse"
+    center: Point
+    width: float
+    height: float
+
+class CircleDrawable(BaseDrawable):
+    type: Literal["circle"] = "circle"
+    center: Point
+    radius: float
+
+class GlowDotDrawable(BaseDrawable):
+    type: Literal["glow_dot"] = "glow_dot"
+    center: Point
+    radius: float = 1.0
+
+class NGonDrawable(BaseDrawable):
+    type: Literal["ngon"] = "ngon"
+    center: Point
+    radius: float
+    n: int
+
+class RoundedRectangleDrawable(BaseDrawable):
+    type: Literal["rounded_rectangle"] = "rounded_rectangle"
+    top_left: Point
+    width: float
+    height: float
+    border_radius: float = 0.1
+
+class RoundedSquareDrawable(BaseDrawable):
+    type: Literal["rounded_square"] = "rounded_square"
+    top_left: Point
+    side_length: float
+    border_radius: float = 0.1
+
 # drawable union
 DrawableType = Union[
     MathDrawable, TextDrawable, SquareDrawable, RectangleDrawable, 
-    LineDrawable, PolygonDrawable, SVGDrawable, GroupDrawable, EraserDrawable
+    LineDrawable, PolygonDrawable, SVGDrawable, GroupDrawable, EraserDrawable,
+    ArrowDrawable, CurvedArrowDrawable, CurveDrawable, EllipseDrawable,
+    CircleDrawable, GlowDotDrawable, NGonDrawable, RoundedRectangleDrawable,
+    RoundedSquareDrawable
 ]
 
 # animations

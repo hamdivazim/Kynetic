@@ -31,7 +31,7 @@
       "width": 200,
       "height": 150,
       "stroke_style": { "color": "black", "width": 2 },
-      "fill_style": { "color": "blue", "hachure_gap": 10 }
+      "fill_style": { "color": "blue", "hachure_gap": 10, "hachure_angle": 45 }
     },
     {
       "id": "rect_ac",
