@@ -1,0 +1,189 @@
+{
+  "name": "A Plus B Square Proof",
+  "scene": {
+    "width": 1920,
+    "height": 1088,
+    "background_color": "white"
+  },
+  "definitions": [
+    {
+      "id": "title_text",
+      "type": "math",
+      "tex_expression": "$(a + b)^2 = ?$",
+      "position": { "x": 800, "y": 500 },
+      "font_size": 192,
+      "stroke_style": { "color": "blue", "width": 2 },
+      "glow_dot_hint": { "color": "blue", "radius": 5 }
+    },
+    {
+      "id": "main_square",
+      "type": "square",
+      "position": { "x": 300, "y": 500 },
+      "side_length": 300,
+      "stroke_style": { "color": "black", "width": 2 },
+      "fill_style": { "color": "blue", "hachure_gap": 10 },
+      "sketch_style": { "roughness": 3 }
+    },
+    {
+      "id": "label_aplusb_top",
+      "type": "math",
+      "tex_expression": "$a + b$",
+      "position": { "x": 450, "y": 400 },
+      "font_size": 60
+    },
+    {
+      "id": "label_aplusb_right",
+      "type": "math",
+      "tex_expression": "$a + b$",
+      "position": { "x": 650, "y": 650 },
+      "font_size": 60
+    },
+    {
+      "id": "aplusb_label_group",
+      "type": "group",
+      "children_ids": ["label_aplusb_top", "label_aplusb_right"]
+    },
+    {
+      "id": "final_header_label",
+      "type": "math",
+      "tex_expression": "$(a + b)^2$",
+      "position": { "x": 600, "y": 200 },
+      "font_size": 96
+    },
+    {
+      "id": "grid_v_line",
+      "type": "line",
+      "position": { "x": 400, "y": 500 },
+      "end_point": { "x": 400, "y": 800 },
+      "stroke_style": { "color": "black", "width": 2 }
+    },
+    {
+      "id": "grid_h_line",
+      "type": "line",
+      "position": { "x": 300, "y": 600 },
+      "end_point": { "x": 600, "y": 600 },
+      "stroke_style": { "color": "black", "width": 2 }
+    },
+    {
+      "id": "a_sq_fill",
+      "type": "square",
+      "position": { "x": 300, "y": 500 },
+      "side_length": 100,
+      "fill_style": { "color": "red", "hachure_gap": 10, "hachure_angle": 135 }
+    },
+    {
+      "id": "label_a_top",
+      "type": "math", "tex_expression": "$a$", "position": { "x": 350, "y": 400 }, "font_size": 60
+    },
+    {
+      "id": "label_a_left",
+      "type": "math", "tex_expression": "$a$", "position": { "x": 200, "y": 550 }, "font_size": 60
+    },
+    {
+      "id": "a_label_group",
+      "type": "group", "children_ids": ["label_a_top", "label_a_left"]
+    },
+    {
+      "id": "a_sq_result_label",
+      "type": "math",
+      "tex_expression": "= a^2",
+      "position": { "x": 950, "y": 200 },
+      "font_size": 96
+    },
+    {
+      "id": "b_sq_fill",
+      "type": "square",
+      "position": { "x": 400, "y": 600 },
+      "side_length": 200,
+      "fill_style": { "color": "red", "hachure_gap": 10, "hachure_angle": 135 }
+    },
+    {
+      "id": "label_b_bottom",
+      "type": "math", "tex_expression": "$b$", "position": { "x": 500, "y": 900 }, "font_size": 60
+    },
+    {
+      "id": "label_b_right",
+      "type": "math", "tex_expression": "$b$", "position": { "x": 700, "y": 700 }, "font_size": 60
+    },
+    {
+      "id": "b_label_group",
+      "type": "group", "children_ids": ["label_b_bottom", "label_b_right"]
+    },
+    {
+      "id": "b_sq_result_label",
+      "type": "math",
+      "tex_expression": "+ b^2",
+      "position": { "x": 1200, "y": 200 },
+      "font_size": 96
+    },
+    {
+      "id": "rect_ab_1",
+      "type": "rectangle",
+      "position": { "x": 400, "y": 500 },
+      "width": 200,
+      "height": 100,
+      "fill_style": { "color": "orange", "hachure_gap": 10, "hachure_angle": 135 }
+    },
+    {
+      "id": "ab_result_label_1",
+      "type": "math", "tex_expression": "+ ab", "position": { "x": 1350, "y": 200 }, "font_size": 96
+    },
+    {
+      "id": "rect_ab_2",
+      "type": "rectangle",
+      "position": { "x": 300, "y": 600 },
+      "width": 100,
+      "height": 200,
+      "fill_style": { "color": "orange", "hachure_gap": 10, "hachure_angle": 135 }
+    },
+    {
+      "id": "ab_result_label_2",
+      "type": "math", "tex_expression": "+ ab", "position": { "x": 1550, "y": 200 }, "font_size": 96
+    },
+    {
+      "id": "final_equation",
+      "type": "math",
+      "tex_expression": "= a^2 + b^2 + 2ab",
+      "position": { "x": 950, "y": 320 },
+      "font_size": 96,
+      "stroke_style": { "color": "blue", "width": 2 }
+    }
+  ],
+  "timeline": [
+    { "type": "sketch", "target_id": "title_text", "start_time": 0, "duration": 1 },
+    { "type": "fade_out", "target_id": "title_text", "start_time": 1, "duration": 2 },
+    
+    { "type": "sketch", "target_id": "main_square", "start_time": 3.5, "duration": 3 },
+    { "type": "sketch", "target_id": "aplusb_label_group", "start_time": 3.5, "duration": 1 },
+    { "type": "zoom_out", "target_id": "aplusb_label_group", "start_time": 4.5, "duration": 2 },
+    { "type": "translate_to", "target_id": "aplusb_label_group", "start_time": 4.5, "duration": 2, "persist": true, "destination": { "x": 600, "y": 200 } },
+    
+    { "type": "fade_in", "target_id": "final_header_label", "start_time": 6.5, "duration": 1 },
+    { "type": "fade_out", "target_id": "aplusb_label_group", "start_time": 6.5, "duration": 1 },
+
+    { "type": "sketch", "target_id": "grid_v_line", "start_time": 7, "duration": 1 },
+    { "type": "sketch", "target_id": "grid_h_line", "start_time": 7, "duration": 1 },
+
+    { "type": "sketch", "target_id": "a_sq_fill", "start_time": 8.5, "duration": 2 },
+    { "type": "sketch", "target_id": "a_label_group", "start_time": 10.5, "duration": 1 },
+    { "type": "translate_to", "target_id": "a_label_group", "start_time": 11.5, "duration": 2, "persist": true, "destination": { "x": 950, "y": 200 } },
+    
+    { "type": "fade_in", "target_id": "a_sq_result_label", "start_time": 13.5, "duration": 1 },
+    { "type": "fade_out", "target_id": "a_label_group", "start_time": 13.5, "duration": 1 },
+
+    { "type": "sketch", "target_id": "b_sq_fill", "start_time": 13.5, "duration": 2 },
+    { "type": "sketch", "target_id": "b_label_group", "start_time": 15.5, "duration": 1 },
+    { "type": "translate_to", "target_id": "b_label_group", "start_time": 16.5, "duration": 2, "persist": true, "destination": { "x": 1200, "y": 200 } },
+    
+    { "type": "fade_in", "target_id": "b_sq_result_label", "start_time": 18.5, "duration": 1 },
+    { "type": "fade_out", "target_id": "b_label_group", "start_time": 18.5, "duration": 1 },
+
+    { "type": "sketch", "target_id": "rect_ab_1", "start_time": 19.5, "duration": 2 },
+    { "type": "fade_in", "target_id": "ab_result_label_1", "start_time": 24.5, "duration": 1 },
+
+    { "type": "sketch", "target_id": "rect_ab_2", "start_time": 25.5, "duration": 2 },
+    { "type": "fade_in", "target_id": "ab_result_label_2", "start_time": 30.5, "duration": 1 },
+
+    { "type": "sketch", "target_id": "final_equation", "start_time": 32.5, "duration": 1.5 }
+  ]
+}
