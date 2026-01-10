@@ -36,3 +36,6 @@ mypy = "^1.5"
 [tool.poetry-auto-export]
 output = "requirements.txt"
 without_hashes = true
+
+[tool.poetry.scripts]
+kynetic-render = "renderer.main:render"
