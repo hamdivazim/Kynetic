@@ -1,3 +1,9 @@
+# Dev-specific stuff
+# ------------------
+
+# output from renderer
+renderer/renderer/output
+
 # Python
 # ------
 
