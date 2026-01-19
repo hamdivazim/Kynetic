@@ -8,6 +8,8 @@ BUCKET = os.environ["BUCKET_NAME"]
 def handler(event, context):
     """
     AWS Lambda handler for Kynetic AWS put-url API
+
+    https://github.com/hamdivazim/Kynetic
     
     :param event: Description
     :param context: Description

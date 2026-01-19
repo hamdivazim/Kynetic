@@ -45,7 +45,7 @@ Clone your repository and set up the Python environment.
 npm install -g aws-cdk
 
 # 2. Navigate to project root
-cd kynetic-cdk-project
+cd editor/cdk
 
 # 3. Create and activate a virtual environment
 python -m venv .venv
@@ -90,12 +90,12 @@ You can find your API Deployment URL and key in the AWS Dashboard:
 
 ## 5: How to Use It
 
-To get a URL to upload a file named `photo.jpg`:
+To get a URL to upload a file named `photo.svg`:
 
 **Request:**
 
 ```http
-GET https://YOUR_API_URL/put-url?key=photo.jpg
+GET https://YOUR_API_URL/put-url?key=photo.svg
 X-Api-Key: YOUR_API_KEY
 
 ```
@@ -104,7 +104,7 @@ X-Api-Key: YOUR_API_KEY
 
 ```json
 {
-  "url": "https://filesbucket-xxx.s3.amazonaws.com/photo.jpg?AWSAccessKeyId=..."
+  "url": "https:/kyneticcdkstack-filesbucket0000000-xxxxxxxxx.s3.amazonaws.com/photo.svg?AWSAccessKeyId=..."
 }
 
 ```
@@ -113,15 +113,15 @@ X-Api-Key: YOUR_API_KEY
 
 ## 6: How to Delete Stack
 
-To avoid being charged for resources you aren't using, you can tear down the entire stack with one command:
+To avoid being charged for resources you aren't using, you can tear down the entire stack with one command. If you want to remake it, you will have to get a new API and API key by redeploying.
 
 ```bash
 cdk destroy
 
 ```
 
-* Note: By default, S3 buckets containing files will not be deleted for safety. You may need to manually empty and delete the FilesBucket (named like`kyneticcdkstack-filesbucket0000000-xxxxxxxxx`) in the S3 console.
+* Note: By default, S3 buckets containing files will not be deleted for safety. You may need to manually empty and delete it (named like `kyneticcdkstack-filesbucket0000000-xxxxxxxxx`) in the S3 console.
 
 ### Security Warning
 
-The `allowed_origins=["*"]` setting in `cdk_stack.py` and the Lambda headers is currently for development only. If you have your own website URL (eg, `https://myapp.com`), replace the `*` with your actual domain to prevent unauthorized websites from using your API.
+The `allowed_origins=["*"]` setting in `cdk_stack.py` and the Lambda headers is currently for development only (it will be set to the address of my self hosted instance by default once development is complete). If you have your own website URL (eg, `https://myapp.com`), replace the `*` with your actual domain to prevent unauthorized websites from using your API.

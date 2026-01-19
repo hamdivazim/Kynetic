@@ -8,11 +8,13 @@ BUCKET = os.environ["BUCKET_NAME"]
 def handler(event, context):
     """
     AWS Lambda handler for Kynetic AWS get-url API
+
+    https://github.com/hamdivazim/Kynetic
     
     :param event: Description
     :param context: Description
     """
-    
+
     query_params = event.get("queryStringParameters")
     if not query_params or "key" not in query_params:
         return {

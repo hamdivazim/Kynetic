@@ -13,6 +13,8 @@ import os
 class KyneticCDKStack(Stack):
     """
     AWS CDK Stack for deploying Kynetic BYOC resources.
+
+    https://github.com/hamdivazim/Kynetic
     """
 
     def __init__(self, scope: Construct, id: str, **kwargs):
