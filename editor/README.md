@@ -7,6 +7,10 @@
 `/aws` - architecture and planning docs
 `/cdk` - AWS CDK IaaC code
 
+## How To Deploy
+- Clone this repository then navigate to `editor\cdk` in your CLI.
+- Then follow the instructions [here](cdk/README.md) (`cdk/README.md`).
+
 ## AWS Architecture
 Below is the document located at [`aws/ARCHITECTURE.md`](aws/ARCHITECTURE.md).
 
