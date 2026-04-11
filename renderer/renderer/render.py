@@ -4,6 +4,7 @@ from tqdm import tqdm
 
 from pydantic import ValidationError
 from renderer.schema import AnimationProject, Point
+from renderer.fetch import fetch_from_s3
 
 from handanim.core import (
     Scene, 
@@ -132,6 +133,19 @@ def render_project(json_path: str, output_file: str = None):
         log.critical(f"File not found: {json_path}")
         sys.exit(1)
 
+    api_url = None
+    api_key = None
+    
+    has_s3_assets = any(
+        getattr(defn, 'src', '').startswith('s3://') 
+        for defn in project.definitions
+    )
+
+    if has_s3_assets:
+        log.info("This project uses remote assets from S3. Enter your AWS API and API Key to fetch.")
+        api_url = input("Enter API URL: ").strip()
+        api_key = input("Enter API Key: ").strip()
+
     # setup scene
     scene = Scene(
         width=project.scene.width, 
@@ -209,7 +223,13 @@ def render_project(json_path: str, output_file: str = None):
 
         elif definition.type == "svg":
             json_dir = os.path.dirname(os.path.abspath(json_path))
-            svg_path = os.path.join(json_dir, definition.src)
+            svg_path = ""
+
+            if definition.src.startswith("s3://"):
+                log.info(f"Fetching {definition.src} from S3...")
+                svg_path = fetch_from_s3(api_url, api_key, definition.src, log)
+            else:
+                svg_path = os.path.join(json_dir, definition.src)
             
             obj = VectorSVG.from_svg_file(
                 svg_path,
