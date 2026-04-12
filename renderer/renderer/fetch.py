@@ -2,13 +2,15 @@ import requests, sys
 from pathlib import Path
 from urllib.parse import urljoin, urlencode
 
-def fetch_from_s3(api, api_key, obj_key, log):
+def fetch_from_s3(api, api_key, obj_key, log, base: Path):
     """
     Fetches an object (image) from S3, using the API deployed via the Kynetic CDK Stack.
     
     :param api: URL of deployed API
     :param api_key: API Key of deployed API
     :param obj_key: Object key in S3
+    :param log: Logging object from main render job
+    :param base_dir: A Path object pointing to the temporary directory
     """
 
     if not api.endswith("/"):
@@ -28,7 +30,7 @@ def fetch_from_s3(api, api_key, obj_key, log):
     presigned_url_response.raise_for_status()
     presigned_url = presigned_url_response.json().get("url")
 
-    output_path = Path("fetched") / obj_key.lstrip("/")
+    output_path = base / obj_key.lstrip("/")
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with requests.get(presigned_url, stream=True) as response:
