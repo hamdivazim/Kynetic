@@ -3,6 +3,8 @@
 
 # output from renderer
 renderer/renderer/output
+# fetched from s3
+renderer/fetched
 
 # Python
 # ------

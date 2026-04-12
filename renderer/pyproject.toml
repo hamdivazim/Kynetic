@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kynetic-renderer"
-version = "0.0.1"
+version = "0.1"
 description = "Renderer engine for Kynetic"
 authors = ["Hamd Waseem <hamd.waseem@hamdtel.co.uk>"]
 license = "MIT"
@@ -26,6 +26,8 @@ svgpathtools = ">=1.7.0"
 svgelements = ">=1.9.6"
 
 pydantic = "^2.3"
+aws-cdk-lib = "^2.248.0"
+requests = "^2.33.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0"

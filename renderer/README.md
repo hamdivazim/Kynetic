@@ -46,6 +46,14 @@ This renders the video in the same directory as the project file.
 docker run --rm -v "$(pwd)/<project_dir>:/input" -v "$(pwd)/<output_dir>:/output" kynetic-renderer:latest /input/<project_file>.json
 ```
 
+* Using S3 fetching:
+  * Provide your API URL and Key (from your CDK Stack) either by directly inputting during runtime, or by providing as an environment variable:
+
+```bash
+docker run --rm -e KYNETIC_API_URL="https://your-api-id.execute-api.region.amazonaws.com" -e KYNETIC_API_KEY="your-secret-api-key" -v "$(pwd)/<project_dir>:/input" -v "$(pwd)/<output_dir>:/output" kynetic-renderer:latest /input/<project_file>.json
+```
+
+
 #### Troubleshooting
 
 * **Output file missing:**
