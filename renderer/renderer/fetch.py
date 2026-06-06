@@ -10,13 +10,14 @@ def fetch_from_s3(api, api_key, obj_key, log, base: Path):
     :param api_key: API Key of deployed API
     :param obj_key: Object key in S3
     :param log: Logging object from main render job
-    :param base_dir: A Path object pointing to the temporary directory
+    :param base: A Path object pointing to the temporary directory
     """
 
     if not api.endswith("/"):
         api += "/"
     obj_key = obj_key.removeprefix("s3://")
 
+    # fetch S3 presigned url from API Gateway
     get_presigned_url = urljoin(api, "prod/get-url")+"?"+urlencode({
         "key": obj_key
     })
@@ -33,6 +34,7 @@ def fetch_from_s3(api, api_key, obj_key, log, base: Path):
     output_path = base / obj_key.lstrip("/")
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
+    # download S3 object using presigned URLs
     with requests.get(presigned_url, stream=True) as response:
         if response.status_code == 404:
             log.critical("Error 404 - Check the object key and API URL are correct.")

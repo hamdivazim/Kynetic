@@ -121,6 +121,7 @@ def render_project(json_path: str, output_file: str = None):
     :type output_file: str
     """
 
+    # validate JSON Project
     log.info(f"Loading project from {json_path}...")
     try:
         with open(json_path, 'r') as f:
@@ -138,6 +139,7 @@ def render_project(json_path: str, output_file: str = None):
     with tempfile.TemporaryDirectory() as tmp_dir:
         temp_path = Path(tmp_dir)
 
+        # check remote assets
         api_url = os.getenv("KYNETIC_API_URL")
         api_key = os.getenv("KYNETIC_API_KEY")
         
@@ -147,7 +149,7 @@ def render_project(json_path: str, output_file: str = None):
         )
 
         if has_s3_assets:
-            log.info("This project uses remote assets from S3. Enter your AWS API and API Key to fetch.")
+            log.info("This project uses remote assets from S3. Enter your AWS API and API Key to fetch if not provided in environment variables.")
             if not api_url:
                 api_url = input("Enter API URL: ").strip()
             if not api_key:
@@ -177,6 +179,7 @@ def render_project(json_path: str, output_file: str = None):
 
             obj = None
 
+            # create drawable objects
             if definition.type == "math":
                 font_name = definition.font_name or "feasibly"
                 obj = Math(
@@ -284,6 +287,7 @@ def render_project(json_path: str, output_file: str = None):
 
             anim = None
 
+            # create event objects
             if event.type == "sketch":
                 anim = SketchAnimation(
                     start_time=event.start_time,
