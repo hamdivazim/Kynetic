@@ -250,3 +250,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+!editor/kynetic-editor/src/lib/
