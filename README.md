@@ -1,6 +1,32 @@
-# Kynetic
+<div align="center">
+  <img src="kynetic.png" width="80%">
+</div>
 
-A full-stack, BYOC engine for hand-drawn style animations.
+<div align="center">
+  <h1>Kynetic</h1>
+</div>
+
+<div align="center">
+
+  <a href="https://hub.docker.com/r/hamdivazim/kynetic-renderer">
+      <img alt="Docker Image Version" src="https://img.shields.io/docker/v/hamdivazim/kynetic-renderer?style=flat-square&label=Docker&color=%230575ED">
+  </a>
+
+  <a href="https://github.com/hamdivazim/Kynetic">
+      <img alt="GitHub stars" src="https://img.shields.io/github/stars/hamdivazim/Kynetic?style=flat-square&label=GitHub Stars&color=%230575ED">
+  </a>
+
+  <a href="https://hub.docker.com/r/hamdivazim/kynetic-renderer">
+      <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/hamdivazim/kynetic-renderer?style=flat-square&label=Docker Pulls&color=%230575ED">
+  </a>
+
+</div>
+
+<div align="center">
+
+  A full-stack, BYOC engine for hand-drawn style animations.
+
+</div>
 
 Kynetic is a tool for making whiteboard-style animations. You build a scene in the
 browser (shapes, text, LaTeX, SVGs) arrange the pieces on a timeline, export a JSON
