@@ -1,127 +1,80 @@
-# Kynetic Presigned URL API Deployment Guide
+# Presigned URL API (AWS CDK)
 
-This CDK Stack deploys a secure, serverless API that generates S3 Presigned URLs for uploading and downloading files. It includes a private S3 bucket, two Lambda functions, and an API Gateway secured by an API Key.
+This stack deploys a small serverless API on your AWS account that hands out S3 presigned URLs for
+uploading and downloading SVG assets: a private S3 bucket, four Lambda functions, and
+an API Gateway secured by an API key. It is entirely optional. The editor and
+renderer work without it.
 
 ## Prerequisites
 
-Before you start, ensure you have the following installed on your local machine:
-
 1. Python 3.11+
-2. Node.js (LTS version) – Required for the CDK Toolkit.
-3. AWS CLI - [Installation Link](https://aws.amazon.com/cli/).
+2. Node.js (LTS) required for the CDK toolkit
+3. AWS CLI - [installation guide](https://aws.amazon.com/cli/)
 
+## 1. Set up your AWS credentials
 
-## 1: Set Up Your AWS Credentials
+If you don't have an access key yet, create one in the AWS Console. Instructions available on [AWS Documentation](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-quickstart.html).
 
-If you don't have an Access Key and Secret Key, you need to create them in the AWS Console.
-
-1. Log in to the [AWS Management Console](https://console.aws.amazon.com/).
-2. Search for IAM in the top search bar.
-3. Go to Users / Create user.
-4. Attach the `AdministratorAccess` either through a group or directly.
-5. Once created, click on the user name / Security credentials tab.
-6. Scroll to Access keys / Create access key.
-7. Select Command Line Interface (CLI), check the box, and click Next.
-8. **IMPORTANT:** Copy your Access Key ID and Secret Access Key. You will not see the Secret Key again.
-
-Now, configure your computer:
-Open your terminal and run:
+## 2. Project setup
 
 ```bash
-aws configure
-
-```
-
-Paste your Access Key and Secret Key when prompted.
-Default region: eg, `us-east-1`.
-
-
-## 2: Project Setup
-
-Clone your repository and set up the Python environment.
-
-```bash
-# 1. Install AWS CDK globally
 npm install -g aws-cdk
 
-# 2. Navigate to project root
 cd editor/cdk
 
-# 3. Create and activate a virtual environment
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
 
-# 4. Install dependencies
 pip install -r requirements.txt
-
 ```
 
-## 3: Deploy
+## 3. Deploy
 
-Before the first deployment, you must "Bootstrap" your AWS account (sets up an S3 bucket for CDK assets).
+The first deployment needs a one-off bootstrap (it provisions an S3 bucket for CDK
+assets):
 
 ```bash
-# Prepare the AWS environment (Only do this once)
-cdk bootstrap
-
-# Deploy the stack
+cdk bootstrap     # once per account/region
 cdk deploy
-
 ```
 
-Wait for the green checkmarks. At the end, the terminal will print Outputs, including your `APIKeyId`.
+Wait for it to finish. The terminal prints the stack Outputs, including
+`ApiKeyId`, the ID of the API key (not its value; you'll fetch that in step 4).
 
-## 4: Find Your URL & Key in the Console
+## 4. Find your API key in the CLI
 
-You can find your API Deployment URL and key in the AWS Dashboard:
+1. Run the command outputted by the CDK stack (`aws apigateway get-api-key --api-key {key.key_id} --include-value`).
+2. The value field is your API key.
+3. API URL will also be outputted by the CDK Stack.
 
-### Find your API URL
+Send this value in the `X-Api-Key` header of every request. The editor stores both in
+localStorage via the AWS Setup dialog; pass them to the renderer as
+`KYNETIC_API_URL` / `KYNETIC_API_KEY`.
 
-1. Go to the API Gateway console.
-2. Click on `Kynetic-PresignedURL-API`.
-3. On the left menu, click Stages / `prod`.
-4. Your Invoke URL is at the top (it looks like `https://xxx.execute-api.us-east-1.amazonaws.com/prod`).
+## 5. Using the API
 
-### Find your API Key
+The stack exposes two parallel sets of presigned-URL routes. Every route requires the
+`X-Api-Key` header, and the usage plan by default throttles to 10 requests/second with a burst of
+2.
 
-1. In the API Gateway console, click API Keys on the left menu.
-2. Click on `ClientApiKey`.
-3. Click Show next to the API Key value. You need to send this in the `X-Api-Key` header of your requests.
+Presigned URLs are valid for 5 minutes.
 
-## 5: How to Use It
+Upload by `PUT`-ing the file to that URL with the same `Content-Type` you passed in.
 
-To get a URL to upload a file named `photo.svg`:
+## 6. Tearing down
 
-**Request:**
-
-```http
-GET https://YOUR_API_URL/put-url?key=photo.svg
-X-Api-Key: YOUR_API_KEY
-
-```
-
-**Response:**
-
-```json
-{
-  "url": "https:/kyneticcdkstack-filesbucket0000000-xxxxxxxxx.s3.amazonaws.com/photo.svg?AWSAccessKeyId=..."
-}
-
-```
-
----
-
-## 6: How to Delete Stack
-
-To avoid being charged for resources you aren't using, you can tear down the entire stack with one command. If you want to remake it, you will have to get a new API and API key by redeploying.
+To avoid paying for resources you aren't using:
 
 ```bash
 cdk destroy
-
 ```
 
-* Note: By default, S3 buckets containing files will not be deleted for safety. You may need to manually empty and delete it (named like `kyneticcdkstack-filesbucket0000000-xxxxxxxxx`) in the S3 console.
+Redeploying later issues a new API key, so update the editor or renderer with the new
+value. Note that S3 buckets containing files aren't deleted by default. Empty the
+bucket (named like `kyneticcdkstack-filesbucket0000000-xxxxxxxxx`) in the S3 console
+first if you want it gone.
 
-### Security Warning
+### Security note
 
-The `allowed_origins=["*"]` setting in `cdk_stack.py` and the Lambda headers is currently for development only (it will be set to the address of my self hosted instance by default once development is complete). If you have your own website URL (eg, `https://myapp.com`), replace the `*` with your actual domain to prevent unauthorized websites from using your API.
+`allowed_origins=["*"]` in `cdk_stack.py` (and the matching Lambda headers) is a
+development default. Before deploying publicly, replace `*` with the origin(s) where you host the editor. This restricts browser cross-origin requests from other origins; it does not replace API authentication or prevent non-browser clients from calling the API.

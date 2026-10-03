@@ -1,102 +1,147 @@
 # kynetic-renderer
 
-`kynetic-renderer` is a Python-based renderer for JSON projects created with the Kynetic cloud editor. It converts project definitions into videos using the `handanim` engine.
+A Dockerised Python renderer for Kynetic project files. Drawing is done internally by the
+[`handanim`](https://github.com/subroy13/handanim) engine.
 
-## Features
+## Project files
 
-* Render JSON project definitions to video with `handanim`
-* Supports core drawables: `Text`, `Math`, `Square`, `Rectangle`, `Line`, `Polygon`, `SVG`
-* Supports basic animations: `TranslateTo`, `FadeIn`, `FadeOut`, `ZoomOut`, `Sketch`
-* Fully Dockerized for easy deployment and consistent environments
+A project is a JSON document with three parts, validated against
+[`renderer/schema.py`](renderer/schema.py):
 
-## How to Use
+- `scene`: width, height, background colour (1920×1080 white by default)
+- `definitions`: the nodes (the editor's nine supported drawable types)
+- `timeline`: the transitions that animate them
 
-### Docker (Recommended)
+Two timeline rules matter when reading the output:
 
-You can either pull the prebuilt container from Docker Hub or build it locally.
+- A node only appears once it has an entrance event (`sketch` or `fade_in`). The
+  editor injects these on export; if you write JSON by hand, add one per node.
+- The video runs until the last transition ends, plus one second (five seconds if the
+  timeline is empty).
 
-#### Pull from Docker Hub
+Sample projects live in [`examples/`](examples), start with
+`examples/pythagoras.json`.
+
+## Supported content
+
+- **Drawables:** `math`, `text`, `square`, `rectangle`, `line`, `polygon`, `svg`,
+  `eraser`, `group`. The schema accepts every type the editor can produce, but the
+  renderer only constructs these; anything else is skipped with an
+  `Unsupported drawable type` warning in the log.
+- **Transitions:** `sketch`, `fade_in`, `fade_out`, `zoom_out`, and `translate_to`
+  (with `persist` to leave the node at its destination).
+- **Remote assets:** `s3://name.svg` sources are fetched through the Kynetic API at
+  render time (see [S3 fetching](#s3-fetching) below). Relative paths resolve against
+  the project file's directory.
+
+## Docker (recommended)
+
+The image ships everything that's needed for Kynetic to work immediately: Cairo, FFmpeg, and the
+fonts.
 
 ```bash
+# Pull the published image...
 docker pull hamdivazim/kynetic-renderer:latest
+
+# ...or build it from this directory
+cd renderer
+docker build --no-cache -t kynetic-renderer:latest .
 ```
 
-#### Build Locally
+Render a project by mounting a directory as `/input` and `/output`:
 
-* Navigate to the directory containing the `Dockerfile`.
-* Build the container:
+```bash
+docker run --rm \
+  -v "$(pwd)/:/input" \
+  -v "$(pwd)/:/output" \
+  kynetic-renderer:latest /input/my_project.json
+```
+
+The video is written to `/output/<name>.mp4`, so with the mounts above it lands next
+to the project file. To keep input and output separate:
+
+```bash
+docker run --rm \
+  -v "$(pwd)/<project_dir>:/input" \
+  -v "$(pwd)/<output_dir>:/output" \
+  kynetic-renderer:latest /input/my_project.json
+```
+
+On PowerShell, replace `$(pwd)` with `${PWD}`.
+
+### S3 fetching
+
+If the project references `s3://` assets, pass your API URL and key (from the CDK
+stack) as environment variables:
+
+```bash
+docker run --rm \
+  -e KYNETIC_API_URL="https://your-api-id.execute-api.region.amazonaws.com" \
+  -e KYNETIC_API_KEY="your-api-key" \
+  -v "$(pwd)/<project_dir>:/input" \
+  -v "$(pwd)/<output_dir>:/output" \
+  kynetic-renderer:latest /input/my_project.json
+```
+
+| Variable | Meaning |
+| --- | --- |
+| `KYNETIC_API_URL` | API Gateway URL, with or without the `/prod` stage suffix |
+| `KYNETIC_API_KEY` | The `ClientApiKey` value; sent as the `X-Api-Key` header |
+
+Leave them unset and the container prompts for the URL and key at runtime instead (the
+key input is hidden).
+
+## Local development with poetry
+
+Install the system libraries first:
+
+```bash
+# Ubuntu/Debian
+sudo apt install ffmpeg libcairo2-dev pkg-config python3-dev
+
+# macOS
+brew install ffmpeg cairo pkg-config
+```
+
+Then install and render:
+
+```bash
+poetry install
+poetry run kynetic-render examples/pythagoras.json --out pythagoras.mp4
+```
+
+Two things to keep in mind:
+
+- Run from this `renderer/` directory. The font files are located relative to your
+  working directory.
+- `--out` chooses where the video goes. Without it the output path defaults to
+  `/output/<name>.mp4` (the container's mount point).
+
+## Troubleshooting
+
+**Output file missing.** Check the absolute path to your project. `$(pwd)` maps your
+current terminal directory, and on some Windows/macOS setups Docker takes a few
+seconds to sync files back to the host.
+
+**A node is missing from the video.** Either it has no entrance event (add a `sketch`
+or `fade_in` event for it), or the log warned
+`Unsupported drawable type` / `Animation references unknown ID`.
+
+**Build errors mentioning `gcc`, `cc`, or `pycairo`.** Rebuild without the cache so
+dependencies compile cleanly:
 
 ```bash
 docker build --no-cache -t kynetic-renderer:latest .
 ```
 
-#### Render a Project
+**Library not found, or `ffmpeg` missing.** Use the provided `Dockerfile`. It installs
+Cairo, FFmpeg, and the build tools that standard Python images leave out.
 
-* Map your project directory to the container and run:
+**404 while fetching an `s3://` asset.** The object key or API URL is wrong. The key
+must match the `src` in the JSON exactly, and the API URL may be given with or without
+the `/prod` suffix.
 
-```bash
-docker run --rm -v "$(pwd)/:/input" -v "$(pwd)/:/output" kynetic-renderer:latest /input/<project_file>.json
-```
+## License
 
-This renders the video in the same directory as the project file.
-
-* Render to a custom output directory:
-
-```bash
-docker run --rm -v "$(pwd)/<project_dir>:/input" -v "$(pwd)/<output_dir>:/output" kynetic-renderer:latest /input/<project_file>.json
-```
-
-* Using S3 fetching:
-  * Provide your API URL and Key (from your CDK Stack) either by directly inputting during runtime, or by providing as an environment variable:
-
-```bash
-docker run --rm -e KYNETIC_API_URL="https://your-api-id.execute-api.region.amazonaws.com" -e KYNETIC_API_KEY="your-secret-api-key" -v "$(pwd)/<project_dir>:/input" -v "$(pwd)/<output_dir>:/output" kynetic-renderer:latest /input/<project_file>.json
-```
-
-
-#### Troubleshooting
-
-* **Output file missing:**
-
-  * Ensure the absolute path to your project is correct. `$(pwd)` maps the current terminal directory.
-  * On some Windows/macOS systems, Docker may take a few seconds to sync files back to the host.
-
-* **Build errors with `gcc`, `cc`, or `pycairo`:**
-
-  ```bash
-  docker build --no-cache -t kynetic-renderer .
-  ```
-
-  This clears the cache and ensures all dependencies rebuild correctly.
-
-* **Library not found / `ffmpeg` missing:**
-  Use the provided `Dockerfile`. It installs all required system libraries (`Cairo`, `FFmpeg`) that are not included in standard Python environments.
-
-
-### Local Development via `poetry`
-
-#### Install prerequisites
-
-* **Ubuntu/Debian:**
-
-```bash
-sudo apt install ffmpeg libcairo2-dev pkg-config python3-dev
-```
-
-* **macOS:**
-
-```bash
-brew install ffmpeg cairo pkg-config
-```
-
-#### Install dependencies
-
-```bash
-poetry install
-```
-
-#### Render a project
-
-```bash
-poetry run kynetic-render path/to/project.json
-```
+[MIT License](LICENSE). The editor in this repository is AGPL-3.0; this
+directory stays permissive so the renderer can be used in other projects, and to respect handanim as the underlying engine.
