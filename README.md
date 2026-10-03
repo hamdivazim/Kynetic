@@ -13,11 +13,11 @@
   </a>
 
   <a href="https://github.com/hamdivazim/Kynetic">
-      <img alt="GitHub stars" src="https://img.shields.io/github/stars/hamdivazim/Kynetic?style=flat-square&label=GitHub Stars&color=%230575ED">
+      <img alt="GitHub stars" src="https://img.shields.io/github/stars/hamdivazim/Kynetic?style=flat-square&label=GitHub%20Stars&color=%230575ED">
   </a>
 
   <a href="https://hub.docker.com/r/hamdivazim/kynetic-renderer">
-      <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/hamdivazim/kynetic-renderer?style=flat-square&label=Docker Pulls&color=%230575ED">
+      <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/hamdivazim/kynetic-renderer?style=flat-square&label=Docker%20Pulls&color=%230575ED">
   </a>
 
 </div>
